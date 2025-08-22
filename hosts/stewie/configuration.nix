@@ -65,6 +65,7 @@
     micro
     fastfetch
     git
+    cifs-utils
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -75,7 +76,8 @@
   #   enableSSHSupport = true;
   # };
 
-  # List services that you want to enable:
+  networking.firewall.enable = true;
+  networking.firewall.allowPing = true;
 
   # Enable the OpenSSH daemon.
   services.openssh = {
