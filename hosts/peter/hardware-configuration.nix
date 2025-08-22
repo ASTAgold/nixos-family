@@ -28,6 +28,53 @@
     [ { device = "/dev/disk/by-uuid/285ffa67-845a-4fa4-859f-1be7615d3954"; }
     ];
 
+
+
+  fileSystems."/mnt/data1" = {
+    device = "/dev/disk/by-uuid/a6157074-268b-4d55-9231-be5badc7bb5e";
+    fsType = "ext4";
+  };
+  fileSystems."/mnt/data2" = {
+    device = "/dev/disk/by-uuid/892e3360-8a18-4390-b1ea-0c873acc4423";
+    fsType = "ext4";
+  };
+  fileSystems."/mnt/parity" = {
+    device = "/dev/disk/by-uuid/afb82e4b-8f9c-4acf-9562-014c78980cf8";
+    fsType = "ext4";
+  };
+
+  #mergerfs 
+  fileSystems."/mnt/storage" = {
+    fsType = "fuse.mergerfs";
+    device = "/mnt/data*";
+    options = ["defaults" "minfreespace=250G" "fsname=mergerfs-jbod"];
+  };
+
+  #snapraid later ;)
+#   snapraid = {
+#     enable = true;
+#     parityFiles = [
+#       "/mnt/parity/snapraid.parity"
+#     ];
+#     dataDisks = {
+#       d1 = "/mnt/data1/";
+#       d2 = "/mnt/data2/";
+#     };
+#     # the content files can be placed wherever. There just needs
+#     # to be <# of parity drives> + 1 content files.
+#     contentFiles = [
+#       "/mnt/data1/snapraid.content"
+#       "/mnt/data2/snapraid.content"
+#     ];
+#     exclude = [
+#       "*.unrecoverable"
+#       "/lost+found/"
+#       "/media/"
+#     ];
+# 
+#   };
+#     
+
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
   # still possible to use this option, but it's recommended to use it in conjunction

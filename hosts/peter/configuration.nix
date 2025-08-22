@@ -6,11 +6,12 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
       ./hardware-configuration.nix
       ./../../modules/user.nix
     ];
 
+  
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -65,7 +66,44 @@
     micro
     fastfetch
     cbonsai
+    mergerfs
+    snapraid
   ];
+
+  # SAMBA share
+  services.samba = {
+      enable = true;
+      openFirewall = true;
+      # Add a global configuration for your home network
+      settings = {
+        global = {
+          "workgroup" = "WORKGROUP";
+          "server string" = "%h server";
+          "netbios name" = "peter";
+          "security" = "user"; # Use user-based authentication
+        };
+        # Define your storage share
+        storage = {
+          path = "/mnt/storage";
+          "guest ok" = "no"; # Do not allow guest access
+          "read only" = "no";
+          "valid users" = "@users"; # Allow all users in the 'users' group
+          "create mask" = "0664";
+          "directory mask" = "0775";
+        };
+      };
+      # A convenience option to open the firewall ports for Samba
+    };
+  
+
+services.samba-wsdd = {
+  enable = true;
+  openFirewall = true;
+};
+
+networking.firewall.enable = true;
+networking.firewall.allowPing = true;
+
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
