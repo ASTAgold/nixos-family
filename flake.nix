@@ -15,7 +15,6 @@
         # Import the previous configuration.nix we used,
         # so the old configuration file still takes effect
         ./hosts/stewie/configuration.nix
-        ./modules/user.nix
       ];
     };
     
@@ -25,9 +24,7 @@
       modules = [
         # Import the previous configuration.nix we used,
         # so the old configuration file still takes effect
-        ./hosts/peter/configuration.nix
-        ./modules/user.nix
-      ];
+        ./hosts/peter/configuration.nix      ];
     };
   };
 }
