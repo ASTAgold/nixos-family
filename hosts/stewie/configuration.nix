@@ -79,8 +79,8 @@
   #   enableSSHSupport = true;
   # };
 
-  networking.firewall.enable = true;
-  networking.firewall.allowPing = true;
+  # networking.firewall.enable = true;
+  # networking.firewall.allowPing = true;
 
   # Enable the OpenSSH daemon.
   services.openssh = {
@@ -94,8 +94,8 @@
   };
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 9120 ];
-  networking.firewall.allowedUDPPorts = [  ];
+  # networking.firewall.allowedTCPPorts = [ 9120 ];
+  # networking.firewall.allowedUDPPorts = [  ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
