@@ -9,7 +9,8 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./../../modules/user.nix
-      ./../../modules/podman.nix
+      # ./../../modules/podman.nix
+      ./../../modules/docker.nix
     ];
 
   # Bootloader.

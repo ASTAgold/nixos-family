@@ -10,7 +10,8 @@
       ./hardware-configuration.nix
       ./../../modules/user.nix
       ./../../modules/samba.nix
-      ./../../modules/podman.nix
+      # ./../../modules/podman.nix
+      ./../../modules/docker.nix
     ];
 
   
