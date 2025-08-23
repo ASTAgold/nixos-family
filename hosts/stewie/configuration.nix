@@ -66,6 +66,7 @@
     fastfetch
     git
     cifs-utils
+    compose2nix
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
