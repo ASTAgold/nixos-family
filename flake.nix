@@ -11,7 +11,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
+  outputs = { self, nixpkgs, compose2nix, ... }@inputs: {
     # Please replace my-nixos with your hostname
     nixosConfigurations.stewie = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
@@ -20,6 +20,9 @@
         # Import the previous configuration.nix we used,
         # so the old configuration file still takes effect
         ./hosts/stewie/configuration.nix
+        {
+        environment.systemPackages = [ inputs.compose2nix.packages.x86_64-linux.default ];
+        }
       ];
     };
     

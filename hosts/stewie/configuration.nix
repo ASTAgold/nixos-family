@@ -68,7 +68,6 @@
     fastfetch
     git
     cifs-utils
-    inputs.compose2nix.packages.x86_64-linux.default
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
