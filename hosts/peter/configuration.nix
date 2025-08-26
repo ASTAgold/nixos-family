@@ -12,6 +12,7 @@
       ./../../modules/samba.nix
       # ./../../modules/podman.nix
       ./../../modules/docker.nix
+      ./../../modules/komodo.nix
     ];
 
   
