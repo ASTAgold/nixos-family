@@ -11,6 +11,7 @@
       ./../../modules/user.nix
       # ./../../modules/podman.nix
       ./../../modules/docker.nix
+      ./../../modules/komodo.nix
     ];
 
   # Bootloader.
