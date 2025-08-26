@@ -13,11 +13,11 @@
   virtualisation.oci-containers.containers."komodo-core" = {
     image = "ghcr.io/moghtech/komodo-core:latest";
     environment = {
-      "COMPOSE_KOMODO_BACKUPS_PATH" = "/home/admin/stacks/komodo/backups";
+      "COMPOSE_KOMODO_BACKUPS_PATH" = "/etc/komodo/backups";
       "COMPOSE_KOMODO_IMAGE_TAG" = "latest";
       "KOMODO_AWS_ACCESS_KEY_ID" = "# Alt: KOMODO_AWS_ACCESS_KEY_ID_FILE";
       "KOMODO_AWS_SECRET_ACCESS_KEY" = "# Alt: KOMODO_AWS_SECRET_ACCESS_KEY_FILE";
-      "KOMODO_DATABASE_ADDRESS" = "ferretdb:27017";
+      "KOMODO_DATABASE_ADDRESS" = "mongo:27017";
       "KOMODO_DATABASE_PASSWORD" = "admin";
       "KOMODO_DATABASE_USERNAME" = "admin";
       "KOMODO_DB_PASSWORD" = "admin";
@@ -42,6 +42,7 @@
       "KOMODO_PASSKEY" = "a_random_passkey";
       "KOMODO_PRETTY_STARTUP_CONFIG" = "false";
       "KOMODO_RESOURCE_POLL_INTERVAL" = "1-hr";
+      "KOMODO_STORAGE" = "/home/admin/stacks/komodo";
       "KOMODO_TITLE" = "Komodo";
       "KOMODO_TRANSPARENT_MODE" = "false";
       "KOMODO_WEBHOOK_SECRET" = "a_random_secret";
@@ -50,7 +51,7 @@
       "PERIPHERY_LOGGING_PRETTY" = "false";
       "PERIPHERY_PASSKEYS" = "a_random_passkey";
       "PERIPHERY_PRETTY_STARTUP_CONFIG" = "false";
-      "PERIPHERY_ROOT_DIRECTORY" = "/home/admin/stacks/komodo/periphery";
+      "PERIPHERY_ROOT_DIRECTORY" = "/etc/komodo";
       "PERIPHERY_SSL_ENABLED" = "true";
       "TZ" = "Etc/UTC";
     };
@@ -67,7 +68,7 @@
       "komodo.skip" = "";
     };
     dependsOn = [
-      "komodo-ferretdb"
+      "komodo-mongo"
     ];
     log-driver = "journald";
     extraOptions = [
@@ -95,30 +96,31 @@
       "docker-compose-komodo-root.target"
     ];
   };
-  virtualisation.oci-containers.containers."komodo-ferretdb" = {
-    image = "ghcr.io/ferretdb/ferretdb";
+  virtualisation.oci-containers.containers."komodo-mongo" = {
+    image = "l33tlamer/mongodb-without-avx:latest";
     environment = {
-      "FERRETDB_POSTGRESQL_URL" = "postgres://admin:admin@postgres:5432/postgres";
+      "MONGO_INITDB_ROOT_PASSWORD" = "admin";
+      "MONGO_INITDB_ROOT_USERNAME" = "admin";
     };
     environmentFiles = [
       "/home/admin/stacks/komodo/compose.env"
     ];
     volumes = [
-      "/home/admin/stacks/komodo/database/state:/state:rw"
+      "/home/admin/stacks/komodo/db/config:/data/configdb:rw"
+      "/home/admin/stacks/komodo/db/data:/data/db:rw"
     ];
+    cmd = [ "--quiet" "--wiredTigerCacheSizeGB" "0.25" ];
     labels = {
       "komodo.skip" = "";
     };
-    dependsOn = [
-      "komodo-postgres"
-    ];
+    user = "root";
     log-driver = "journald";
     extraOptions = [
-      "--network-alias=ferretdb"
+      "--network-alias=mongo"
       "--network=komodo_default"
     ];
   };
-  systemd.services."docker-komodo-ferretdb" = {
+  systemd.services."docker-komodo-mongo" = {
     serviceConfig = {
       Restart = lib.mkOverride 90 "always";
       RestartMaxDelaySec = lib.mkOverride 90 "1m";
@@ -141,7 +143,7 @@
   virtualisation.oci-containers.containers."komodo-periphery" = {
     image = "ghcr.io/moghtech/komodo-periphery:latest";
     environment = {
-      "COMPOSE_KOMODO_BACKUPS_PATH" = "/home/admin/stacks/komodo/backups";
+      "COMPOSE_KOMODO_BACKUPS_PATH" = "/etc/komodo/backups";
       "COMPOSE_KOMODO_IMAGE_TAG" = "latest";
       "KOMODO_AWS_ACCESS_KEY_ID" = "# Alt: KOMODO_AWS_ACCESS_KEY_ID_FILE";
       "KOMODO_AWS_SECRET_ACCESS_KEY" = "# Alt: KOMODO_AWS_SECRET_ACCESS_KEY_FILE";
@@ -167,6 +169,7 @@
       "KOMODO_PASSKEY" = "a_random_passkey";
       "KOMODO_PRETTY_STARTUP_CONFIG" = "false";
       "KOMODO_RESOURCE_POLL_INTERVAL" = "1-hr";
+      "KOMODO_STORAGE" = "/home/admin/stacks/komodo";
       "KOMODO_TITLE" = "Komodo";
       "KOMODO_TRANSPARENT_MODE" = "false";
       "KOMODO_WEBHOOK_SECRET" = "a_random_secret";
@@ -175,7 +178,7 @@
       "PERIPHERY_LOGGING_PRETTY" = "false";
       "PERIPHERY_PASSKEYS" = "a_random_passkey";
       "PERIPHERY_PRETTY_STARTUP_CONFIG" = "false";
-      "PERIPHERY_ROOT_DIRECTORY" = "/home/admin/stacks/komodo/periphery";
+      "PERIPHERY_ROOT_DIRECTORY" = "/etc/komodo";
       "PERIPHERY_SSL_ENABLED" = "true";
       "TZ" = "Etc/UTC";
     };
@@ -183,7 +186,7 @@
       "/home/admin/stacks/komodo/compose.env"
     ];
     volumes = [
-      "/home/admin/stacks/komodo/periphery:/home/admin/stacks/komodo/periphery:rw"
+      "/home/admin/stacks/komodo/periphery:/etc/komodo:rw"
       "/proc:/proc:rw"
       "/var/run/docker.sock:/var/run/docker.sock:rw"
     ];
@@ -197,48 +200,6 @@
     ];
   };
   systemd.services."docker-komodo-periphery" = {
-    serviceConfig = {
-      Restart = lib.mkOverride 90 "always";
-      RestartMaxDelaySec = lib.mkOverride 90 "1m";
-      RestartSec = lib.mkOverride 90 "100ms";
-      RestartSteps = lib.mkOverride 90 9;
-    };
-    after = [
-      "docker-network-komodo_default.service"
-    ];
-    requires = [
-      "docker-network-komodo_default.service"
-    ];
-    partOf = [
-      "docker-compose-komodo-root.target"
-    ];
-    wantedBy = [
-      "docker-compose-komodo-root.target"
-    ];
-  };
-  virtualisation.oci-containers.containers."komodo-postgres" = {
-    image = "ghcr.io/ferretdb/postgres-documentdb";
-    environment = {
-      "POSTGRES_DB" = "postgres";
-      "POSTGRES_PASSWORD" = "admin";
-      "POSTGRES_USER" = "admin";
-    };
-    environmentFiles = [
-      "/home/admin/stacks/komodo/compose.env"
-    ];
-    volumes = [
-      "/home/admin/stacks/komodo/database/data:/var/lib/postgresql/data:rw"
-    ];
-    labels = {
-      "komodo.skip" = "";
-    };
-    log-driver = "journald";
-    extraOptions = [
-      "--network-alias=postgres"
-      "--network=komodo_default"
-    ];
-  };
-  systemd.services."docker-komodo-postgres" = {
     serviceConfig = {
       Restart = lib.mkOverride 90 "always";
       RestartMaxDelaySec = lib.mkOverride 90 "1m";
