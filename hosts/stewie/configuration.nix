@@ -25,6 +25,22 @@
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver   		# modern Intel VAAPI driver (QSV)
+      intel-compute-runtime 	# OpenCL filter support (hardware tonemapping and subtitle burn-in)
+      libvdpau-va-gl       		# optional, for VDPAU apps
+    ];
+  };
+
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
+
+
+
+
+  
+
   # Enable networking
   networking.networkmanager.enable = true;
 
@@ -69,6 +85,9 @@
     fastfetch
     git
     cifs-utils
+    libva-utils
+    jellyfin-ffmpeg
+    ffmpeg
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -97,7 +116,7 @@
   # networking.firewall.allowedTCPPorts = [ 9120 ];
   # networking.firewall.allowedUDPPorts = [  ];
   # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
