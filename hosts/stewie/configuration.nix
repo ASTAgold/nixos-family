@@ -19,11 +19,17 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "stewie"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.useDHCP = false;
+  networking.defaultGateway = "192.168.100.1";
+  networking.nameservers = ["192.168.100.1"];
+  networking.interfaces.eno1 = {
+        useDHCP = false;
+        ipv4.addresses = [ { 
+        	address = "192.168.100.12";
+        	prefixLength = 24;
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+        } ];
+  };
 
   hardware.graphics = {
     enable = true;
@@ -35,11 +41,6 @@
   };
 
   environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
-
-
-
-
-  
 
   # Enable networking
   networking.networkmanager.enable = true;
