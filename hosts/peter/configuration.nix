@@ -21,13 +21,16 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "peter"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.useDHCP = false;
+  networking.defaultGateway = "192.168.100.1";
+  networking.interfaces.eno1 = {
+        useDHCP = false;
+        ipv4.addresses = [ { 
+        	address = "192.168.100.10";
+        	prefixLength = 24;
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
+        } ];
+  };
   networking.networkmanager.enable = true;
 
   # Set your time zone.
@@ -74,10 +77,6 @@
     snapraid
   ];
 
-networking.firewall.enable = true;
-networking.firewall.allowPing = true;
-
-
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -95,7 +94,7 @@ networking.firewall.allowPing = true;
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
