@@ -23,6 +23,7 @@
   networking.hostName = "peter"; # Define your hostname.
   networking.useDHCP = false;
   networking.defaultGateway = "192.168.100.1";
+  networking.nameservers = ["192.168.100.1"];
   networking.interfaces.eno1 = {
         useDHCP = false;
         ipv4.addresses = [ { 
