@@ -97,6 +97,7 @@
     jellyfin-ffmpeg
     ffmpeg
     wireguard-tools
+    tailscale
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -123,7 +124,7 @@
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ 9120 ];
-  # networking.firewall.allowedUDPPorts = [  ];
+  # networking.firewall.allowedUDPPorts = [ ${services.tailscale.port} ];
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
 
