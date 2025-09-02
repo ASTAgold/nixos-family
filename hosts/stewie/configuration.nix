@@ -39,6 +39,7 @@
       libvdpau-va-gl       		# optional, for VDPAU apps
     ];
   };
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
 
   # wireguard kernel module
   # boot.extraModulePackages = [ config.boot.kernelPackages.wireguard ];
@@ -46,10 +47,7 @@
 
   #tailscale
   services.tailscale.enable = true;
-  services.tailscale.useRoutingFeatures = "server"
-   
-
-  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
+  services.tailscale.useRoutingFeatures = "both";
 
   # Enable networking
   networking.networkmanager.enable = true;
