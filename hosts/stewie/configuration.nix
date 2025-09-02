@@ -43,6 +43,10 @@
   # wireguard kernel module
   # boot.extraModulePackages = [ config.boot.kernelPackages.wireguard ];
   # environment.systemPackages = [ pkgs.wireguard pkgs.wireguard-tools ];
+
+  #tailscale
+  services.tailscale.enable = true;
+  services.tailscale.useRoutingFeatures = "server"
    
 
   environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
