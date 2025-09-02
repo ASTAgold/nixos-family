@@ -21,7 +21,9 @@
         # so the old configuration file still takes effect
         ./hosts/stewie/configuration.nix
         {
-        environment.systemPackages = [ inputs.compose2nix.packages.x86_64-linux.default ];
+        environment.systemPackages = [ 
+        	inputs.compose2nix.packages.x86_64-linux.default
+       	];
         }
       ];
     };

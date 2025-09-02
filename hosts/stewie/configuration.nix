@@ -40,6 +40,11 @@
     ];
   };
 
+  # wireguard kernel module
+  # boot.extraModulePackages = [ config.boot.kernelPackages.wireguard ];
+  # environment.systemPackages = [ pkgs.wireguard pkgs.wireguard-tools ];
+   
+
   environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
 
   # Enable networking
@@ -89,6 +94,7 @@
     libva-utils
     jellyfin-ffmpeg
     ffmpeg
+    wireguard-tools
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
