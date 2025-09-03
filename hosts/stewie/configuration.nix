@@ -47,7 +47,7 @@
 
   #tailscale
   services.tailscale.enable = true;
-  services.tailscale.useRoutingFeatures = "both";
+  services.tailscale.useRoutingFeatures = "server";
 
   # Enable networking
   networking.networkmanager.enable = true;
