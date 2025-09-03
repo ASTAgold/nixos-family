@@ -34,6 +34,10 @@
   };
   networking.networkmanager.enable = true;
 
+  #tailscale
+  services.tailscale.enable = true;
+  services.tailscale.useRoutingFeatures = "server";
+
   # Set your time zone.
   time.timeZone = "Africa/Casablanca";
 
@@ -76,6 +80,7 @@
     cbonsai
     mergerfs
     snapraid
+    tailscale
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -93,7 +98,7 @@
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  # networking.firewall.allowedUDPPorts = [ ${services.tailscale.port} ];
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
 
